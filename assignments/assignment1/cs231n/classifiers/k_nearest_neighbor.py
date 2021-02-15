@@ -68,6 +68,10 @@ class KNearestNeighbor(object):
         num_train = self.X_train.shape[0]
         dists = np.zeros((num_test, num_train))
         for i in range(num_test):
+            # Take ith test example of shape (1, 3072)
+            # Image was flattened to an array of pixel values
+            # of each color channel [---R--- ---G--- ---B---]
+            test_example = X[i]
             for j in range(num_train):
                 #####################################################################
                 # TODO:                                                             #
@@ -77,8 +81,17 @@ class KNearestNeighbor(object):
                 #####################################################################
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-                pass
-
+                # Take the jth training example
+                train_example = self.X_train[j]
+                
+                # L2 distance = Euclidean distance
+                # Element-wise difference and square
+                diff_squares = np.square(test_example - train_example)
+                
+                # Take the sum of all elements in array
+                # np.sum() returns a scalar with axis=None
+                dists[i, j] = sqrt( np.sum(diff_squares, axis=None) )
+                
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
