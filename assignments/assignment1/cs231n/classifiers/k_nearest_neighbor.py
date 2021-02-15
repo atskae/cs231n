@@ -3,6 +3,8 @@ from builtins import object
 import numpy as np
 from past.builtins import xrange
 
+# Custom packages
+from math import sqrt
 
 class KNearestNeighbor(object):
     """ a kNN classifier with L2 distance """
@@ -90,7 +92,7 @@ class KNearestNeighbor(object):
                 
                 # Take the sum of all elements in array
                 # np.sum() returns a scalar with axis=None
-                dists[i, j] = sqrt( np.sum(diff_squares, axis=None) )
+                dists[i, j] = float(sqrt( np.sum(diff_squares, axis=None) ))
                 
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
