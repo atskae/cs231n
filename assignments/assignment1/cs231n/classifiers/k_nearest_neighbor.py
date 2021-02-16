@@ -84,6 +84,8 @@ class KNearestNeighbor(object):
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
                 # Take the jth training example
+                # which is also a flattened image array:
+                # [---R--- ---G--- ---B---]
                 train_example = self.X_train[j]
                 
                 # L2 distance = Euclidean distance
