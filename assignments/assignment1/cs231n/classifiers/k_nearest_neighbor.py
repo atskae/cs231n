@@ -161,6 +161,7 @@ class KNearestNeighbor(object):
         Inputs:
         - dists: A numpy array of shape (num_test, num_train) where dists[i, j]
           gives the distance betwen the ith test point and the jth training point.
+        - k: An integer determining how many nearest neighbors to obtain
 
         Returns:
         - y: A numpy array of shape (num_test,) containing predicted labels for the
@@ -168,6 +169,14 @@ class KNearestNeighbor(object):
         """
         num_test = dists.shape[0]
         y_pred = np.zeros(num_test)
+        
+        # Check k value
+        num_train = dists.shape[1]
+        if k < 0 or k > num_train:
+            print("""k=%i must be non-negative integer that is <=
+                the number of training examples %i""" % (k, num_train))
+            return y_pred
+        
         for i in range(num_test):
             # A list of length k storing the labels of the k nearest neighbors to
             # the ith test point.
@@ -181,7 +190,17 @@ class KNearestNeighbor(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            # Row/array of distances for ith test example
+            # Each element in this array is the distance between
+            # ith test example and the jth training example            
+            # Sorts dists in increasing order
+            # Returns the *indices* of the sorted array
+            dist_indices = np.argsort(dists[i])
+            
+            # Obtain the label of the first k training examples
+            # At this point, we know k <= num_train
+            for j in range(0, k):
+              closest_y.append(self.y_train[dist_indices[j]])
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             #########################################################################
@@ -193,7 +212,20 @@ class KNearestNeighbor(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            # Naive way
+            counts = {}
+            for label in closest_y:
+                if label in counts:
+                    counts[label] += 1
+                else:
+                    counts[label] = 1
+
+            # Sort the dict insertion order to descending by value 
+            # Multiply by -1 for descending order
+            counts = dict(sorted(counts.items(), key=lambda item: -1 * item[1]))
+
+            # Store prediction for the ith test example
+            y_pred[i] = list(counts.keys())[0]
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
