@@ -109,6 +109,8 @@ class KNearestNeighbor(object):
         num_test = X.shape[0]
         num_train = self.X_train.shape[0]
         dists = np.zeros((num_test, num_train))
+        #print('X.shape', X.shape)
+        #print('X_train.shape', self.X_train.shape)
         for i in range(num_test):
             #######################################################################
             # TODO:                                                               #
@@ -118,7 +120,34 @@ class KNearestNeighbor(object):
             #######################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            # Array of pixels [---R---G---B---]
+            # Let total pixels (R + G + B pixels) = p
+            # shape = (1, p)
+            test_example = X[i]
+
+            # X.train.shape = (num_train, p)
+            # Broadcasts the test example with the training examples matrix
+            diff_squares = np.square(test_example - self.X_train)
+            # if i == 0:
+            #   print('diff_squares.shape', diff_squares.shape)
+            #   print('test_example[0]', test_example)
+            #   print('train_example[0]', self.X_train[0])
+            #   print('diff_squares[0]', diff_squares[0][0])
+
+            # In each row, sum across the colums
+            # axis=0, sum across rows (go down columns)
+            # axis=1, sum across columns (go across row)
+            sm = np.sum(diff_squares, axis=1, keepdims=True)
+            #if i == 0:
+            #  print('sm.shape', sm.shape)
+            assert (sm.shape == (num_train, 1))
+
+            temp = np.sqrt(sm)
+            #if i == 0:
+            #  print('temp.shape', temp.shape)
+
+            # Transpose column vector temp to row vector
+            dists[i, :] = temp.T
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
