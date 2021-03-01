@@ -186,19 +186,19 @@ class KNearestNeighbor(object):
         X_sq = np.square(X)
         X_train_sq = np.square(self.X_train)
 
-        print('X_sq.shape', X_sq.shape)
-        print('X_train_sq.shape', X_train_sq.shape)
+        # print('X_sq.shape', X_sq.shape)
+        # print('X_train_sq.shape', X_train_sq.shape)
 
         # Sum across rows of each matrix to get column vectors
         X_sm = np.sum(X_sq, axis=1, keepdims=True)
         X_train_sm = np.sum(X_train_sq, axis=1, keepdims=True)
-        print('X_sm.shape', X_sm.shape)
-        print('X_train_sm.shape', X_train_sm.shape)
+        # print('X_sm.shape', X_sm.shape)
+        # print('X_train_sm.shape', X_train_sm.shape)
 
         # For each element in X_sm, sum across all elements in X_train
         # X_train_sm.T becomes a row vector
         sm = X_sm + X_train_sm.T
-        print('sm.shape', sm.shape)
+        # print('sm.shape', sm.shape)
 
         dists = np.sqrt( -2 * np.dot(X, self.X_train.T) + sm)
 
