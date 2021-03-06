@@ -60,7 +60,12 @@ def svm_loss_naive(W, X, y, reg):
     loss += reg * np.sum(W * W)
     
     # Loss function with regularization is now: loss + reg * np.sum(W*W)
-    # Derivative = dW + 
+    # np.sum(W*W = W^2): square each value in W, then sum up the values
+    # np.sum(W^2) = w_00^2 + w_01^2 + ... + w_ij^2
+    # Derivative of np.sum(W^2) = 2*w_00 + 2*w_01 + ... + 2*w_ij
+    #   Pull out the 2 constant: 2(w_00 + w_01 + ... + w_ij)
+    #   = 2*W
+    # Derivative = dW + reg * 2*w (reg is a constant)
     dW = dW + reg*2*W
 
     #############################################################################
