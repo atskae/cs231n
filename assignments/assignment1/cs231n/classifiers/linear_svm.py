@@ -34,17 +34,21 @@ def svm_loss_naive(W, X, y, reg):
         for j in range(num_classes):
             if j == y[i]:
                 continue
+            
             margin = scores[j] - correct_class_score + 1 # note delta = 1
+            coeff = 0
             if margin > 0:
                 loss += margin
+                coeff = 1
             
-            # Compute gradient of incorrect classes
-            coeff = 1 if margin > 0 else 0
+            # # Compute gradient of the incorrect class
+            dW[:,j] += coeff * X[i]
+
+            # # Keep track of sum to use for the correct class
             coeff_class += coeff
-            dW[:,j] = coeff * X[i]
         
         # Compute the gradient for the correct class
-        dW[:,y[i]] = -1 * coeff_class * X[i]
+        dW[:,y[i]] += (-1 * coeff_class * X[i])
 
     # Right now the loss is a sum over all training examples, but we want it
     # to be an average instead so we divide by num_train.
@@ -63,7 +67,8 @@ def svm_loss_naive(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    # pass
+    dW /= num_train
+    dW = dW + reg*2*W
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     
