@@ -1,0 +1,14 @@
+language: python
+stages:
+    - Test
+jobs:
+    include:
+    - name: "Static Checks"
+cache:
+    pip: true
+    directories:
+        - $HOME/.cache/pre-commit
+install:
+    pip install pre-commit
+script:
+    pre-commit run --all-files
