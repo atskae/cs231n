@@ -3,6 +3,7 @@ import numpy as np
 from random import shuffle
 from past.builtins import xrange
 
+
 def svm_loss_naive(W, X, y, reg):
     """
     Structured SVM loss function, naive implementation (with loops).
@@ -21,7 +22,7 @@ def svm_loss_naive(W, X, y, reg):
     - loss as single float
     - gradient with respect to weights W; an array of same shape as W
     """
-    dW = np.zeros(W.shape) # initialize the gradient as zero
+    dW = np.zeros(W.shape)  # initialize the gradient as zero
 
     # compute the loss and the gradient
     num_classes = W.shape[1]
@@ -34,21 +35,21 @@ def svm_loss_naive(W, X, y, reg):
         for j in range(num_classes):
             if j == y[i]:
                 continue
-            
-            margin = scores[j] - correct_class_score + 1 # note delta = 1
+
+            margin = scores[j] - correct_class_score + 1  # note delta = 1
             coeff = 0
             if margin > 0:
                 loss += margin
                 coeff = 1
-            
+
             # Compute gradient of the incorrect class
-            dW[:,j] += coeff * X[i]
+            dW[:, j] += coeff * X[i]
 
             # Keep track of sum to use for the correct class
             coeff_class += coeff
-        
+
         # Compute the gradient for the correct class
-        dW[:,y[i]] += -1 * coeff_class * X[i]
+        dW[:, y[i]] += -1 * coeff_class * X[i]
 
     # Right now the loss is a sum over all training examples, but we want it
     # to be an average instead so we divide by num_train.
@@ -58,7 +59,7 @@ def svm_loss_naive(W, X, y, reg):
 
     # Add regularization to the loss.
     loss += reg * np.sum(W * W)
-    
+
     # Loss function with regularization is now: loss + reg * np.sum(W*W)
     # np.sum(W*W = W^2): square each value in W, then sum up the values
     # np.sum(W^2) = w_00^2 + w_01^2 + ... + w_ij^2
@@ -66,7 +67,7 @@ def svm_loss_naive(W, X, y, reg):
     #   Pull out the 2 constant: 2(w_00 + w_01 + ... + w_ij)
     #   = 2*W
     # Derivative = dW + reg * 2*w (reg is a constant)
-    dW = dW + reg*2*W
+    dW = dW + reg * 2 * W
 
     #############################################################################
     # TODO:                                                                     #
@@ -79,9 +80,8 @@ def svm_loss_naive(W, X, y, reg):
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-    
-    return loss, dW
 
+    return loss, dW
 
 
 def svm_loss_vectorized(W, X, y, reg):
@@ -91,7 +91,7 @@ def svm_loss_vectorized(W, X, y, reg):
     Inputs and outputs are the same as svm_loss_naive.
     """
     loss = 0.0
-    dW = np.zeros(W.shape) # initialize the gradient as zero
+    dW = np.zeros(W.shape)  # initialize the gradient as zero
 
     #############################################################################
     # TODO:                                                                     #

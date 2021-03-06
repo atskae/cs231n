@@ -6,6 +6,7 @@ from past.builtins import xrange
 # Custom packages
 from math import sqrt
 
+
 class KNearestNeighbor(object):
     """ a kNN classifier with L2 distance """
 
@@ -48,7 +49,7 @@ class KNearestNeighbor(object):
         elif num_loops == 2:
             dists = self.compute_distances_two_loops(X)
         else:
-            raise ValueError('Invalid value %d for num_loops' % num_loops)
+            raise ValueError("Invalid value %d for num_loops" % num_loops)
 
         return self.predict_labels(dists, k=k)
 
@@ -87,15 +88,15 @@ class KNearestNeighbor(object):
                 # which is also a flattened image array:
                 # [---R--- ---G--- ---B---]
                 train_example = self.X_train[j]
-                
+
                 # L2 distance = Euclidean distance
                 # Element-wise difference and square
                 diff_squares = np.square(test_example - train_example)
-                
+
                 # Take the sum of all elements in array
                 # np.sum() returns a scalar with axis=None
-                dists[i, j] = float(sqrt( np.sum(diff_squares, axis=None) ))
-                
+                dists[i, j] = float(sqrt(np.sum(diff_squares, axis=None)))
+
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -109,8 +110,8 @@ class KNearestNeighbor(object):
         num_test = X.shape[0]
         num_train = self.X_train.shape[0]
         dists = np.zeros((num_test, num_train))
-        #print('X.shape', X.shape)
-        #print('X_train.shape', self.X_train.shape)
+        # print('X.shape', X.shape)
+        # print('X_train.shape', self.X_train.shape)
         for i in range(num_test):
             #######################################################################
             # TODO:                                                               #
@@ -138,12 +139,12 @@ class KNearestNeighbor(object):
             # axis=0, sum across rows (go down columns)
             # axis=1, sum across columns (go across row)
             sm = np.sum(diff_squares, axis=1, keepdims=True)
-            #if i == 0:
+            # if i == 0:
             #  print('sm.shape', sm.shape)
-            assert (sm.shape == (num_train, 1))
+            assert sm.shape == (num_train, 1)
 
             temp = np.sqrt(sm)
-            #if i == 0:
+            # if i == 0:
             #  print('temp.shape', temp.shape)
 
             # Transpose column vector temp to row vector
@@ -200,7 +201,7 @@ class KNearestNeighbor(object):
         sm = X_sm + X_train_sm.T
         # print('sm.shape', sm.shape)
 
-        dists = np.sqrt( -2 * np.dot(X, self.X_train.T) + sm)
+        dists = np.sqrt(-2 * np.dot(X, self.X_train.T) + sm)
 
         # X_sum = np.sum(X, axis=1, keepdims=True)
         # print('X_sum.shape', X_sum.shape)
@@ -229,14 +230,17 @@ class KNearestNeighbor(object):
         """
         num_test = dists.shape[0]
         y_pred = np.zeros(num_test)
-        
+
         # Check k value
         num_train = dists.shape[1]
         if k < 0 or k > num_train:
-            print("""k=%i must be non-negative integer that is <=
-                the number of training examples %i""" % (k, num_train))
+            print(
+                """k=%i must be non-negative integer that is <=
+                the number of training examples %i"""
+                % (k, num_train)
+            )
             return y_pred
-        
+
         for i in range(num_test):
             # A list of length k storing the labels of the k nearest neighbors to
             # the ith test point.
@@ -252,15 +256,15 @@ class KNearestNeighbor(object):
 
             # Row/array of distances for ith test example
             # Each element in this array is the distance between
-            # ith test example and the jth training example            
+            # ith test example and the jth training example
             # Sorts dists in increasing order
             # Returns the *indices* of the sorted array
             dist_indices = np.argsort(dists[i])
-            
+
             # Obtain the label of the first k training examples
             # At this point, we know k <= num_train
             for j in range(0, k):
-              closest_y.append(self.y_train[dist_indices[j]])
+                closest_y.append(self.y_train[dist_indices[j]])
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             #########################################################################
@@ -280,7 +284,7 @@ class KNearestNeighbor(object):
                 else:
                     counts[label] = 1
 
-            # Sort the dict insertion order to descending by value 
+            # Sort the dict insertion order to descending by value
             # Multiply by -1 for descending order
             counts = dict(sorted(counts.items(), key=lambda item: -1 * item[1]))
 
