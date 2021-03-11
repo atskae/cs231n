@@ -93,6 +93,13 @@ def svm_loss_vectorized(W, X, y, reg):
     loss = 0.0
     dW = np.zeros(W.shape)  # initialize the gradient as zero
 
+    num_examples = X.shape[0]  # X.shape = (num_examples, num_pixels)
+    num_classes = W.shape[1]  # W.shape = (num_pixels, num_classes)
+    y = np.reshape(y, (y.shape[0], 1))
+    print("num_examples", num_examples)
+    print("num_classes", num_classes)
+    print("y.shape", y.shape)
+
     #############################################################################
     # TODO:                                                                     #
     # Implement a vectorized version of the structured SVM loss, storing the    #
@@ -100,7 +107,21 @@ def svm_loss_vectorized(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    # Matrix of scores, where each row contains the class scores for
+    # that image example
+    scores = np.dot(X, W)
+    assert scores.shape == (num_examples, num_classes)
+
+    correct_class_scores = np.take(scores, y.T)
+    new_shape = (correct_class_scores[0], 1)
+    correct_class_scores = np.reshape(correct_class_scores, new_shape)
+    print("correct_class_scores.shape", correct_class_scores.shape)
+
+    margins = np.maximum(0, scores - correct_class_scores + 1)
+    assert margins.shape == scores.shape
+
+    # Zero-out the score of the correct class using fancy indexing
+    margins[y] = 0
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
