@@ -95,7 +95,6 @@ def svm_loss_vectorized(W, X, y, reg):
 
     num_examples = X.shape[0]  # X.shape = (num_examples, num_pixels)
     num_classes = W.shape[1]  # W.shape = (num_pixels, num_classes)
-    y = np.reshape(y, (y.shape[0], 1))
     print("num_examples", num_examples)
     print("num_classes", num_classes)
     print("y.shape", y.shape)
@@ -112,16 +111,34 @@ def svm_loss_vectorized(W, X, y, reg):
     scores = np.dot(X, W)
     assert scores.shape == (num_examples, num_classes)
 
-    correct_class_scores = np.take(scores, y.T)
-    new_shape = (correct_class_scores[0], 1)
-    correct_class_scores = np.reshape(correct_class_scores, new_shape)
+    correct_class_scores = np.take(scores, y, axis=1)
+    correct_class_scores = scores[np.arange(scores.shape[0]), y]
+    assert correct_class_scores.shape == (num_examples,)
+    correct_class_scores = np.reshape(correct_class_scores, (num_examples, 1))
+    print("scores.shape", scores.shape)
     print("correct_class_scores.shape", correct_class_scores.shape)
 
     margins = np.maximum(0, scores - correct_class_scores + 1)
     assert margins.shape == scores.shape
 
+    # Print first example
+    example_num = 25
+    print("Example %i" % example_num)
+    print("scores[0]: ", scores[0])  # row of scores for first example
+    print("scores: ", scores[example_num])  # row of scores for this example
+    print("correct class: ", y[example_num])
+    print("correct_class_scores: ", correct_class_scores[example_num])
+    assert scores[example_num][y[example_num]] == correct_class_scores[example_num]
+
     # Zero-out the score of the correct class using fancy indexing
-    margins[y] = 0
+    margins[np.arange(margins.shape[0]), y] = 0
+    assert margins[example_num][y[example_num]] == 0
+
+    # Compute the final loss by adding up the margins
+    # Sum across the rows
+    loss = np.sum(margins, axis=1)
+    loss = np.sum(loss, axis=0) / num_examples
+    print("loss", loss)
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
